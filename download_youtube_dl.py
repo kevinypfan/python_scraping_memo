@@ -10,10 +10,11 @@ from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
 start = time.time()
 
-
+process_index = 1
 base_youtube_url = 'https://www.youtube.com/watch?v='
-download_path = r'/Users/fanzhenzhe/Music/pytube_downloads'
+download_path = r'/pytube_downloads'
 search_term = 'violeta'
+end_times = []
 need_qty = 21
 
 
@@ -79,22 +80,106 @@ download_list = search_populate(need_qty=need_qty, term=search_term)
 print(len(download_list))
 link_list = ['https://www.youtube.com/watch?v=' + el['link_id']
              for el in download_list]
-ydl_opts = {
-    'outtmpl': '/Users/fanzhenzhe/Music/pytube_downloads/{}/%(title)s.%(ext)s'.format(search_term),
-    'format': 'bestaudio/best',
-    'postprocessors': [{
-        'key': 'FFmpegExtractAudio',
-        'preferredcodec': 'mp3',
-        'preferredquality': '192',
-    }],
-}
 
-with ThreadPoolExecutor() as executor:
+
+with ThreadPoolExecutor(max_workers=1) as executor:
     for link in link_list:
         print(link)
+        ydl_opts = {
+            'outtmpl': '{}/{}/%(title)s.%(ext)s'.format(download_path, process_index),
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+        }
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             executor.submit(ydl.download, [link])
 
 
-end = time.time()
-print(end - start)
+end_times.append(time.time() - start)
+print(end_times[-1])
+
+process_index += 1
+
+with ThreadPoolExecutor(max_workers=2) as executor:
+    for link in link_list:
+        print(link)
+        ydl_opts = {
+            'outtmpl': '{}/{}/%(title)s.%(ext)s'.format(download_path, process_index),
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+        }
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            executor.submit(ydl.download, [link])
+
+end_times.append(time.time() - start)
+print(end_times[-1])
+
+process_index += 1
+
+with ThreadPoolExecutor(max_workers=4) as executor:
+    for link in link_list:
+        print(link)
+        ydl_opts = {
+            'outtmpl': '{}/{}/%(title)s.%(ext)s'.format(download_path, process_index),
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+        }
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            executor.submit(ydl.download, [link])
+
+end_times.append(time.time() - start)
+print(end_times[-1])
+
+process_index += 1
+
+with ThreadPoolExecutor(max_workers=8) as executor:
+    for link in link_list:
+        print(link)
+        ydl_opts = {
+            'outtmpl': '{}/{}/%(title)s.%(ext)s'.format(download_path, process_index),
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+        }
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            executor.submit(ydl.download, [link])
+
+end_times.append(time.time() - start)
+print(end_times[-1])
+
+process_index += 1
+
+with ThreadPoolExecutor() as executor:
+    for link in link_list:
+        print(link)
+        ydl_opts = {
+            'outtmpl': '{}/{}/%(title)s.%(ext)s'.format(download_path, process_index),
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+        }
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            executor.submit(ydl.download, [link])
+
+end_times.append(time.time() - start)
+print(end_times[-1])
+
+
+print(end_times)
