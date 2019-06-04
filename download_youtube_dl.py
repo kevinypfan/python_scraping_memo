@@ -5,6 +5,7 @@ import re
 import os
 import glob
 import time
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
 
 start = time.time()
@@ -87,8 +88,12 @@ ydl_opts = {
         'preferredquality': '192',
     }],
 }
-with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-    ydl.download(link_list)
+
+with ThreadPoolExecutor() as executor:
+    for link in link_list:
+        print(link)
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            executor.submit(ydl.download, [link])
 
 
 end = time.time()
